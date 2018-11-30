@@ -24,7 +24,7 @@ public class Swing extends JFrame {
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    new AddFrame(model);
+                new AddAndEditFrame(model);
             }
         });
 
@@ -37,8 +37,6 @@ public class Swing extends JFrame {
                 if(table.getSelectedRow() != -1 ) {
                     int index = table.getSelectedRow();
                     new RemoveFrame(index, model);
-                    model.readFile();
-                    repaint();
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "Press the book you want to remove");
@@ -54,9 +52,7 @@ public class Swing extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(table.getSelectedRow() != -1) {
                     int index = table.getSelectedRow();
-                    new EditFrame(index, model);
-                    model.readFile();
-                    repaint();
+                    new AddAndEditFrame(index, model);
                 }
                 else {
                     JOptionPane.showMessageDialog(null, "Press the book you want to edit");
