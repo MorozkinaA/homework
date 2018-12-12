@@ -1,5 +1,7 @@
 package com.netcracker;
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class EmailParameters {
@@ -7,8 +9,6 @@ public class EmailParameters {
     private String copy;
     private String subject;
     private String text;
-    private String fromEmail = "example_sender@abc.com";
-    private String host = "127.0.0.1";
 
     public EmailParameters(HttpServletRequest req) {
         this.toEmail = req.getParameter("email");
@@ -19,14 +19,6 @@ public class EmailParameters {
 
     public String getToEmail() {
         return toEmail;
-    }
-
-    public String getFromEmail() {
-        return fromEmail;
-    }
-
-    public String getHost() {
-        return host;
     }
 
     public String getCopy() {
@@ -42,17 +34,21 @@ public class EmailParameters {
     }
 
     public boolean validation() {
-        if(toEmail.matches(" \"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n" +
-                            "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"")){
-            return true;
+        boolean res = false;
+        String valid = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+                "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(valid, Pattern.CASE_INSENSITIVE);
+        Matcher matcherEmail = pattern.matcher(toEmail);
+        Matcher matcherCopy = pattern.matcher(copy);
+        if(matcherEmail.matches()){
+            res = true;
         }
-        if(copy.matches(" \"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n" +
-                "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"")){
-            return true;
+        if(matcherCopy.matches() || "".equals(copy)){
+            res = true;
         }
         if("".equals(text)) {
-            return false;
+            res = false;
         }
-        return false;
+        return res;
     }
 }

@@ -1,5 +1,6 @@
 package com.netcracker;
 
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -18,8 +19,8 @@ public class EmailServlet extends HttpServlet {
         resp.setContentType("text/html");
         PrintWriter pw = resp.getWriter();
         String resultString = "";
-        final String username = "servlet.fake@mail.ru";
-        final String password = "1234567p";
+        final String username = "testingmyservlet@gmail.com";
+        final String password = "qwertyQWERTY1";
 
         EmailParameters params = new EmailParameters(req);
 
@@ -39,14 +40,16 @@ public class EmailServlet extends HttpServlet {
 
             try{
                 MimeMessage message = new MimeMessage(session); // email message
-                message.setFrom(new InternetAddress((params.getFromEmail()))); // setting header
+                message.setFrom(new InternetAddress(username)); // setting header
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.getToEmail()));
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.getCopy()));
+                if(!("".equals(params.getCopy()))) {
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.getCopy()));
+                }
                 message.setSubject(params.getSubject()); // subject line
                 message.setText(params.getText());
                 Transport.send(message);
             }
-            catch (MessagingException ex){
+            catch (Exception ex){
                 ex.printStackTrace();
             }
             resultString = "\t\t<h2> Your email was sent to " + params.getToEmail() + "</h2>";
